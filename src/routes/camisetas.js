@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Camiseta = require('../models/camiseta');
 
 router.get('/', async (req, res) => {
@@ -13,6 +14,9 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ mensaje: 'ID de camiseta no válido' });
+        }
         const camiseta = await Camiseta.findById(req.params.id);
         if (!camiseta) {
             return res.status(404).json({ mensaje: 'Camiseta no encontrada' });

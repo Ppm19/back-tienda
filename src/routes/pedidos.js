@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Pedido = require('../models/pedido');
 const Camiseta = require('../models/camiseta');
 const Pantalon = require('../models/pantalon');
@@ -73,6 +74,9 @@ router.get('/pendientes', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ mensaje: 'ID de pedido no válido' });
+        }
         const pedido = await Pedido.findById(req.params.id);
         if (!pedido) {
             return res.status(404).json({ mensaje: 'Pedido no encontrado' });
@@ -120,6 +124,9 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ mensaje: 'ID de pedido no válido' });
+        }
         const pedido = await Pedido.findByIdAndUpdate(
             req.params.id,
             req.body,
@@ -136,6 +143,9 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ mensaje: 'ID de pedido no válido' });
+        }
         const pedido = await Pedido.findByIdAndDelete(req.params.id);
         if (!pedido) {
             return res.status(404).json({ mensaje: 'Pedido no encontrado' });

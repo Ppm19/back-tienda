@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Sudadera = require('../models/sudadera');
 
 router.get('/', async (req, res) => {
@@ -13,6 +14,9 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ mensaje: 'ID de sudadera no válido' });
+        }
         const sudadera = await Sudadera.findById(req.params.id);
         if (!sudadera) {
             return res.status(404).json({ mensaje: 'Sudadera no encontrada' });
@@ -35,6 +39,9 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ mensaje: 'ID de sudadera no válido' });
+        }
         const sudadera = await Sudadera.findByIdAndUpdate(
             req.params.id,
             req.body,
@@ -51,6 +58,9 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ mensaje: 'ID de sudadera no válido' });
+        }
         const sudadera = await Sudadera.findByIdAndDelete(req.params.id);
         if (!sudadera) {
             return res.status(404).json({ mensaje: 'Sudadera no encontrada' });
