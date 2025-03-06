@@ -1,0 +1,149 @@
+const express = require('express');
+const router = express.Router();
+const Pedido = require('../models/pedido');
+const Camiseta = require('../models/camiseta');
+const Pantalon = require('../models/pantalon');
+const Sudadera = require('../models/sudadera');
+
+router.get('/', async (req, res) => {
+    try {
+        const pedidos = await Pedido.find();
+        const pedidosPopulados = await Promise.all(pedidos.map(async (pedido) => {
+            const productosPopulados = await Promise.all(pedido.listaProductos.map(async (item) => {
+                let producto;
+                switch (item.tipo) {
+                    case 'camiseta':
+                        producto = await Camiseta.findById(item.producto);
+                        break;
+                    case 'pantalon':
+                        producto = await Pantalon.findById(item.producto);
+                        break;
+                    case 'sudadera':
+                        producto = await Sudadera.findById(item.producto);
+                        break;
+                }
+                return {
+                    ...item.toObject(),
+                    producto
+                };
+            }));
+            return {
+                ...pedido.toObject(),
+                listaProductos: productosPopulados
+            };
+        }));
+        res.json(pedidosPopulados);
+    } catch (error) {
+        res.status(500).json({ mensaje: error.message });
+    }
+});
+
+router.get('/pendientes', async (req, res) => {
+    try {
+        const pedidos = await Pedido.find({ estado: 'pendiente' });
+        const pedidosPopulados = await Promise.all(pedidos.map(async (pedido) => {
+            const productosPopulados = await Promise.all(pedido.listaProductos.map(async (item) => {
+                let producto;
+                switch (item.tipo) {
+                    case 'camiseta':
+                        producto = await Camiseta.findById(item.producto);
+                        break;
+                    case 'pantalon':
+                        producto = await Pantalon.findById(item.producto);
+                        break;
+                    case 'sudadera':
+                        producto = await Sudadera.findById(item.producto);
+                        break;
+                }
+                return {
+                    ...item.toObject(),
+                    producto
+                };
+            }));
+            return {
+                ...pedido.toObject(),
+                listaProductos: productosPopulados
+            };
+        }));
+        res.json(pedidosPopulados);
+    } catch (error) {
+        res.status(500).json({ mensaje: error.message });
+    }
+});
+
+router.get('/:id', async (req, res) => {
+    try {
+        const pedido = await Pedido.findById(req.params.id);
+        if (!pedido) {
+            return res.status(404).json({ mensaje: 'Pedido no encontrado' });
+        }
+
+        const productosPopulados = await Promise.all(pedido.listaProductos.map(async (item) => {
+            let producto;
+            switch (item.tipo) {
+                case 'camiseta':
+                    producto = await Camiseta.findById(item.producto);
+                    break;
+                case 'pantalon':
+                    producto = await Pantalon.findById(item.producto);
+                    break;
+                case 'sudadera':
+                    producto = await Sudadera.findById(item.producto);
+                    break;
+            }
+            return {
+                ...item.toObject(),
+                producto
+            };
+        }));
+
+        const pedidoPopulado = {
+            ...pedido.toObject(),
+            listaProductos: productosPopulados
+        };
+
+        res.json(pedidoPopulado);
+    } catch (error) {
+        res.status(500).json({ mensaje: error.message });
+    }
+});
+
+router.post('/', async (req, res) => {
+    const pedido = new Pedido(req.body);
+    try {
+        const nuevoPedido = await pedido.save();
+        res.status(201).json(nuevoPedido);
+    } catch (error) {
+        res.status(400).json({ mensaje: error.message });
+    }
+});
+
+router.put('/:id', async (req, res) => {
+    try {
+        const pedido = await Pedido.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+        if (!pedido) {
+            return res.status(404).json({ mensaje: 'Pedido no encontrado' });
+        }
+        res.json(pedido);
+    } catch (error) {
+        res.status(400).json({ mensaje: error.message });
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+    try {
+        const pedido = await Pedido.findByIdAndDelete(req.params.id);
+        if (!pedido) {
+            return res.status(404).json({ mensaje: 'Pedido no encontrado' });
+        }
+        res.json({ mensaje: 'Pedido eliminado' });
+    } catch (error) {
+        res.status(500).json({ mensaje: error.message });
+    }
+});
+
+module.exports = router; 
