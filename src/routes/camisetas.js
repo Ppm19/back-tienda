@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Camiseta = require('../models/camiseta');
+const Pantalon = require('../models/pantalon');
 
 router.get('/', async (req, res) => {
     try {
@@ -60,6 +61,33 @@ router.delete('/:id', async (req, res) => {
             return res.status(404).json({ mensaje: 'Camiseta no encontrada' });
         }
         res.json({ mensaje: 'Camiseta eliminada' });
+    } catch (error) {
+        res.status(500).json({ mensaje: error.message });
+    }
+});
+
+router.patch('/:id/stock', async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ mensaje: 'ID de camiseta no válido' });
+        }
+        
+        const { stock } = req.body;
+        if (typeof stock !== 'number' || stock < 0) {
+            return res.status(400).json({ mensaje: 'Stock no válido' });
+        }
+
+        const camiseta = await Camiseta.findByIdAndUpdate(
+            req.params.id,
+            { stock },
+            { new: true }
+        );
+
+        if (!camiseta) {
+            return res.status(404).json({ mensaje: 'Camiseta no encontrada' });
+        }
+
+        res.json(camiseta);
     } catch (error) {
         res.status(500).json({ mensaje: error.message });
     }

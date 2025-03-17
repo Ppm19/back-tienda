@@ -71,4 +71,31 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+router.patch('/:id/stock', async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ mensaje: 'ID de pantalón no válido' });
+        }
+        
+        const { stock } = req.body;
+        if (typeof stock !== 'number' || stock < 0) {
+            return res.status(400).json({ mensaje: 'Stock no válido' });
+        }
+
+        const pantalon = await Pantalon.findByIdAndUpdate(
+            req.params.id,
+            { stock },
+            { new: true }
+        );
+
+        if (!pantalon) {
+            return res.status(404).json({ mensaje: 'Pantalón no encontrado' });
+        }
+
+        res.json(pantalon);
+    } catch (error) {
+        res.status(500).json({ mensaje: error.message });
+    }
+});
+
 module.exports = router; 
