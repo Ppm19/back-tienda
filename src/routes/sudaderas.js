@@ -71,31 +71,4 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.patch('/:id/stock', async (req, res) => {
-    try {
-        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-            return res.status(400).json({ mensaje: 'ID de sudadera no válido' });
-        }
-        
-        const { stock } = req.body;
-        if (typeof stock !== 'number' || stock < 0) {
-            return res.status(400).json({ mensaje: 'Stock no válido' });
-        }
-
-        const sudadera = await Sudadera.findByIdAndUpdate(
-            req.params.id,
-            { stock },
-            { new: true }
-        );
-
-        if (!sudadera) {
-            return res.status(404).json({ mensaje: 'Sudadera no encontrada' });
-        }
-
-        res.json(sudadera);
-    } catch (error) {
-        res.status(500).json({ mensaje: error.message });
-    }
-});
-
 module.exports = router; 
