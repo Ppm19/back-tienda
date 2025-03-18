@@ -86,7 +86,15 @@ router.post('/login', async (req, res) => {
 
         res.json({
             mensaje: 'Login exitoso',
-            usuario: { id: usuario._id, correo: usuario.correo }
+            usuario: {
+                _id: usuario._id,
+                nombre: usuario.nombre,
+                apellidos: usuario.apellidos,
+                direccion: usuario.direccion,
+                correo: usuario.correo,
+                pedidos: usuario.pedidos,
+                admin: usuario.admin
+            }
         });
     } catch (error) {
         res.status(500).json({ mensaje: 'Error en el servidor', error: error.message });
