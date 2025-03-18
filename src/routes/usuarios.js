@@ -80,22 +80,13 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ mensaje: 'Correo o contraseña incorrectos' });
         }
 
-        const contraseñaValida = await bcrypt.compare(contraseña, usuario.contraseña);
-        if (!contraseñaValida) {
+        if (usuario.contraseña !== contraseña) {
             return res.status(401).json({ mensaje: 'Correo o contraseña incorrectos' });
         }
 
-        // Generar token JWT
-        const token = jwt.sign(
-            { id: usuario._id, correo: usuario.correo },
-            SECRET_KEY,
-            { expiresIn: '2h' }
-        );
-
         res.json({
             mensaje: 'Login exitoso',
-            usuario: { id: usuario._id, correo: usuario.correo },
-            token
+            usuario: { id: usuario._id, correo: usuario.correo }
         });
     } catch (error) {
         res.status(500).json({ mensaje: 'Error en el servidor', error: error.message });
