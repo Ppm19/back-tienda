@@ -72,7 +72,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    const { correo, contraseña } = req.body;
+    const { correo, password } = req.body;
 
     try {
         const usuario = await Usuario.findOne({ correo });
@@ -80,7 +80,7 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ mensaje: 'Correo o contraseña incorrectos' });
         }
 
-        if (usuario.contraseña !== contraseña) {
+        if (usuario.password !== password) {
             return res.status(401).json({ mensaje: 'Correo o contraseña incorrectos' });
         }
 
