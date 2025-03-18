@@ -73,14 +73,19 @@ router.delete('/:id', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { correo, contraseña } = req.body;
+    console.log('Intentando iniciar sesión con:', correo);
 
     try {
         const usuario = await Usuario.findOne({ correo });
         if (!usuario) {
+            console.log('Usuario no encontrado');
             return res.status(401).json({ mensaje: 'Correo o contraseña incorrectos' });
         }
 
+        console.log('Usuario encontrado:', usuario);
+
         if (usuario.contraseña !== contraseña) {
+            console.log('Contraseña incorrecta');
             return res.status(401).json({ mensaje: 'Correo o contraseña incorrectos' });
         }
 
@@ -89,6 +94,7 @@ router.post('/login', async (req, res) => {
             usuario: { id: usuario._id, correo: usuario.correo }
         });
     } catch (error) {
+        console.error('Error en el servidor:', error.message);
         res.status(500).json({ mensaje: 'Error en el servidor', error: error.message });
     }
 });
