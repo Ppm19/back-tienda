@@ -17,4 +17,4 @@ router.use('/sudaderas', sudaderasRoutes);
 router.use('/usuarios', usuariosRoutes);
 router.use('/pedidos', pedidosRoutes);
 
-module.exports = router; 
+module.exports = router;
