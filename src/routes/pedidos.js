@@ -114,18 +114,10 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const { userId, productos, total } = req.body;
+        const { listaProductos, total } = req.body;
         
         const pedido = new Pedido({
-            listaProductos: productos.map(producto => ({
-                _id: producto._id,
-                foto: producto.foto || producto.imagen,
-                nombre: producto.nombre,
-                precio: producto.precio,
-                descripcion: producto.descripcion,
-                tipo: producto.tipo,
-                stock: producto.stock
-            })),
+            listaProductos: listaProductos,
             total: total,
             estado: 'pendiente'
         });
@@ -134,6 +126,7 @@ router.post('/', async (req, res) => {
         res.status(201).json(nuevoPedido);
         
     } catch (error) {
+        console.error('Error al crear pedido:', error);
         res.status(400).json({ mensaje: error.message });
     }
 });
