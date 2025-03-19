@@ -113,10 +113,26 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const pedido = new Pedido(req.body);
     try {
+        const { userId, productos, total } = req.body;
+        
+        const pedido = new Pedido({
+            listaProductos: productos.map(producto => ({
+                _id: producto._id,
+                foto: producto.foto || producto.imagen,
+                nombre: producto.nombre,
+                precio: producto.precio,
+                descripcion: producto.descripcion,
+                tipo: producto.tipo,
+                stock: producto.stock
+            })),
+            total: total,
+            estado: 'pendiente'
+        });
+
         const nuevoPedido = await pedido.save();
         res.status(201).json(nuevoPedido);
+        
     } catch (error) {
         res.status(400).json({ mensaje: error.message });
     }
