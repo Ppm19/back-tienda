@@ -119,7 +119,8 @@ router.post('/', async (req, res) => {
         const pedido = new Pedido({
             listaProductos: listaProductos,
             total: total,
-            estado: 'pendiente'
+            estado: 'pendiente',
+            usuario: req.user._id
         });
 
         const nuevoPedido = await pedido.save();

@@ -20,7 +20,12 @@ const pedidoSchema = new mongoose.Schema({
         type: String,
         enum: ['pendiente', 'enviado', 'cancelado'],
         default: 'pendiente'
-    }
+    },
+    usuario: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Usuario',
+        required: true
+    },
 }, { 
     collection: 'pedidos',
     toJSON: {
