@@ -13,13 +13,13 @@ router.get('/', async (req, res) => {
             const productosPopulados = await Promise.all(pedido.listaProductos.map(async (item) => {
                 let producto;
                 switch (item.tipo) {
-                    case 'camiseta':
+                    case 'camisetas':
                         producto = await Camiseta.findById(item.producto);
                         break;
-                    case 'pantalon':
+                    case 'pantalones':
                         producto = await Pantalon.findById(item.producto);
                         break;
-                    case 'sudadera':
+                    case 'sudaderas':
                         producto = await Sudadera.findById(item.producto);
                         break;
                 }
@@ -46,13 +46,13 @@ router.get('/pendientes', async (req, res) => {
             const productosPopulados = await Promise.all(pedido.listaProductos.map(async (item) => {
                 let producto;
                 switch (item.tipo) {
-                    case 'camiseta':
+                    case 'camisetas':
                         producto = await Camiseta.findById(item.producto);
                         break;
-                    case 'pantalon':
+                    case 'pantalones':
                         producto = await Pantalon.findById(item.producto);
                         break;
-                    case 'sudadera':
+                    case 'sudaderas':
                         producto = await Sudadera.findById(item.producto);
                         break;
                 }
@@ -85,13 +85,13 @@ router.get('/:id', async (req, res) => {
         const productosPopulados = await Promise.all(pedido.listaProductos.map(async (item) => {
             let producto;
             switch (item.tipo) {
-                case 'camiseta':
+                case 'camisetas':
                     producto = await Camiseta.findById(item.producto);
                     break;
-                case 'pantalon':
+                case 'pantalones':
                     producto = await Pantalon.findById(item.producto);
                     break;
-                case 'sudadera':
+                case 'sudaderas':
                     producto = await Sudadera.findById(item.producto);
                     break;
             }

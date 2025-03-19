@@ -8,7 +8,7 @@ const pedidoSchema = new mongoose.Schema({
         },
         tipo: {
             type: String,
-            enum: ['camiseta', 'pantalon', 'sudadera'],
+            enum: ['camisetas', 'pantalones', 'sudaderas'],
             required: true
         }
     }],
@@ -18,7 +18,7 @@ const pedidoSchema = new mongoose.Schema({
     },
     estado: {
         type: String,
-        enum: ['pendiente', 'enviado', 'entregado', 'cancelado'],
+        enum: ['pendiente', 'enviado', 'cancelado'],
         default: 'pendiente'
     }
 }, { 
