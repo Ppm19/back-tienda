@@ -114,13 +114,13 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const { listaProductos, total } = req.body;
+        const { listaProductos, total, usuario } = req.body;
         
         const pedido = new Pedido({
             listaProductos: listaProductos,
             total: total,
             estado: 'pendiente',
-            usuario: req.user._id
+            usuario: usuario
         });
 
         const nuevoPedido = await pedido.save();
