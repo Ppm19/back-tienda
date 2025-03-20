@@ -2,38 +2,11 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Pedido = require('../models/pedido');
-const Camiseta = require('../models/camiseta');
-const Pantalon = require('../models/pantalon');
-const Sudadera = require('../models/sudadera');
 
 router.get('/', async (req, res) => {
     try {
         const pedidos = await Pedido.find();
-        const pedidosPopulados = await Promise.all(pedidos.map(async (pedido) => {
-            const productosPopulados = await Promise.all(pedido.listaProductos.map(async (item) => {
-                let producto;
-                switch (item.tipo) {
-                    case 'camisetas':
-                        producto = await Camiseta.findById(item.producto);
-                        break;
-                    case 'pantalones':
-                        producto = await Pantalon.findById(item.producto);
-                        break;
-                    case 'sudaderas':
-                        producto = await Sudadera.findById(item.producto);
-                        break;
-                }
-                return {
-                    ...item.toObject(),
-                    producto
-                };
-            }));
-            return {
-                ...pedido.toObject(),
-                listaProductos: productosPopulados
-            };
-        }));
-        res.json(pedidosPopulados);
+        res.json(pedidos);
     } catch (error) {
         res.status(500).json({ mensaje: error.message });
     }
@@ -42,31 +15,7 @@ router.get('/', async (req, res) => {
 router.get('/pendientes', async (req, res) => {
     try {
         const pedidos = await Pedido.find({ estado: 'pendiente' });
-        const pedidosPopulados = await Promise.all(pedidos.map(async (pedido) => {
-            const productosPopulados = await Promise.all(pedido.listaProductos.map(async (item) => {
-                let producto;
-                switch (item.tipo) {
-                    case 'camisetas':
-                        producto = await Camiseta.findById(item.producto);
-                        break;
-                    case 'pantalones':
-                        producto = await Pantalon.findById(item.producto);
-                        break;
-                    case 'sudaderas':
-                        producto = await Sudadera.findById(item.producto);
-                        break;
-                }
-                return {
-                    ...item.toObject(),
-                    producto
-                };
-            }));
-            return {
-                ...pedido.toObject(),
-                listaProductos: productosPopulados
-            };
-        }));
-        res.json(pedidosPopulados);
+        res.json(pedidos);
     } catch (error) {
         res.status(500).json({ mensaje: error.message });
     }
@@ -81,32 +30,7 @@ router.get('/:id', async (req, res) => {
         if (!pedido) {
             return res.status(404).json({ mensaje: 'Pedido no encontrado' });
         }
-
-        const productosPopulados = await Promise.all(pedido.listaProductos.map(async (item) => {
-            let producto;
-            switch (item.tipo) {
-                case 'camisetas':
-                    producto = await Camiseta.findById(item.producto);
-                    break;
-                case 'pantalones':
-                    producto = await Pantalon.findById(item.producto);
-                    break;
-                case 'sudaderas':
-                    producto = await Sudadera.findById(item.producto);
-                    break;
-            }
-            return {
-                ...item.toObject(),
-                producto
-            };
-        }));
-
-        const pedidoPopulado = {
-            ...pedido.toObject(),
-            listaProductos: productosPopulados
-        };
-
-        res.json(pedidoPopulado);
+        res.json(pedido);
     } catch (error) {
         res.status(500).json({ mensaje: error.message });
     }
@@ -114,11 +38,10 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        console.log('Datos recibidos:', req.body); // Para debug
+        console.log('Datos recibidos:', req.body);
 
         const { listaProductos, total, usuario } = req.body;
         
-        // Validar que los datos necesarios estén presentes
         if (!listaProductos || !Array.isArray(listaProductos) || listaProductos.length === 0) {
             return res.status(400).json({ mensaje: 'La lista de productos es requerida y no puede estar vacía' });
         }

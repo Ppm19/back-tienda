@@ -2,45 +2,24 @@ const mongoose = require('mongoose');
 
 const pedidoSchema = new mongoose.Schema({
     listaProductos: [{
-        _id: {
-            type: Number,
-            required: true
-        },
-        foto: {
-            type: String,
-            required: true
-        },
-        nombre: {
-            type: String,
-            required: true
-        },
-        precio: {
-            type: Number,
-            required: true
-        },
-        descripcion: {
-            type: String,
-            required: true
-        },
-        tipo: {
-            type: String,
-            required: true
-        }
+        _id: Number,
+        nombre: String,
+        descripcion: String,
+        precio: Number,
+        foto: String,
+        tipo: String,
+        stock: Number
     }],
-    total: {
-        type: Number,
-        required: true
-    },
+    total: Number,
     estado: {
         type: String,
-        enum: ['pendiente', 'aceptado', 'cancelado'],
+        enum: ['pendiente', 'aceptado', 'rechazado'],
         default: 'pendiente'
     },
-    usuario: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Usuario',
-        required: true
-    }
-}, { collection: 'pedidos' });
+    usuario: String
+}, {
+    timestamps: true,
+    collection: 'pedidos'
+});
 
 module.exports = mongoose.model('Pedido', pedidoSchema);
