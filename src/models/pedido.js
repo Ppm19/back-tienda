@@ -10,6 +10,10 @@ const pedidoSchema = new mongoose.Schema({
             type: String,
             enum: ['camisetas', 'pantalones', 'sudaderas'],
             required: true
+        },
+        descripcion: {
+            type: String,
+            required: true
         }
     }],
     total: {
