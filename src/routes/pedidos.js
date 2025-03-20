@@ -114,13 +114,31 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const { listaProductos, total, descripcion,usuario } = req.body;
+        const { listaProductos, total, usuario } = req.body;
         
+        if (!Array.isArray(listaProductos) || listaProductos.length === 0) {
+            return res.status(400).json({ mensaje: 'La lista de productos es requerida y no puede estar vacía' });
+        }
+        for (const producto of listaProductos) {
+            if (!producto._id || !producto.foto || !producto.nombre || 
+                !producto.precio || !producto.descripcion || !producto.tipo) {
+                return res.status(400).json({ 
+                    mensaje: 'Cada producto debe tener _id, foto, nombre, precio, descripcion y tipo' 
+                });
+            }
+        }
+
         const pedido = new Pedido({
-            listaProductos: listaProductos,
+            listaProductos: listaProductos.map(p => ({
+                _id: p._id,
+                foto: p.foto,
+                nombre: p.nombre,
+                precio: p.precio,
+                descripcion: p.descripcion,
+                tipo: p.tipo
+            })),
             total: total,
             estado: 'pendiente',
-            descripcion: descripcion,
             usuario: usuario
         });
 

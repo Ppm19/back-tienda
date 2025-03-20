@@ -2,17 +2,29 @@ const mongoose = require('mongoose');
 
 const pedidoSchema = new mongoose.Schema({
     listaProductos: [{
-        producto: {
-            type: mongoose.Schema.Types.ObjectId,
+        _id: {
+            type: Number,
+            required: true
+        },
+        foto: {
+            type: String,
+            required: true
+        },
+        nombre: {
+            type: String,
+            required: true
+        },
+        precio: {
+            type: Number,
+            required: true
+        },
+        descripcion: {
+            type: String,
             required: true
         },
         tipo: {
             type: String,
             enum: ['camisetas', 'pantalones', 'sudaderas'],
-            required: true
-        },
-        descripcion: {
-            type: String,
             required: true
         }
     }],
@@ -22,7 +34,7 @@ const pedidoSchema = new mongoose.Schema({
     },
     estado: {
         type: String,
-        enum: ['pendiente', 'enviado', 'cancelado'],
+        enum: ['pendiente', 'aceptado', 'cancelado'],
         default: 'pendiente'
     },
     usuario: {
@@ -42,4 +54,4 @@ const pedidoSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Pedido', pedidoSchema); 
+module.exports = mongoose.model('Pedido', pedidoSchema);
