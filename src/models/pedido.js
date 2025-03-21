@@ -18,7 +18,6 @@ const pedidoSchema = new mongoose.Schema({
     },
     usuario: String
 }, {
-    timestamps: true,
     collection: 'pedidos'
 });
 
